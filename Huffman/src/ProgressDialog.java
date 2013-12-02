@@ -11,8 +11,9 @@ public class ProgressDialog extends JFrame {
 
     private JProgressBar progressbar;
 
-    public ProgressDialog() {
+    public ProgressDialog(String title) {
         super();
+        this.setTitle(title);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         JPanel pane = new JPanel();
