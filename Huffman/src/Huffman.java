@@ -35,7 +35,7 @@ public class Huffman {  // Written by: Yancy Vance Paredes, October 17, 2013
        
        
         
-        String text = "";// = new Scanner(new File("test.txt")).useDelimiter("\\A").next(); // nextLine(); // change it if you only want to read a single line without the new line character.
+      //  String text = "";// = new Scanner(new File("test.txt")).useDelimiter("\\A").next(); // nextLine(); // change it if you only want to read a single line without the new line character.
         int[] freqTab = new int[256];
         ProgressDialog frame = new ProgressDialog("Creation de l'arbre");
         frame.pack();
@@ -44,11 +44,13 @@ public class Huffman {  // Written by: Yancy Vance Paredes, October 17, 2013
 		
         long nbOctets = new File(entree).length();
 		int data = inputstream.read(), nbOctetsCompte = 0;
+																			///////////
+	
 		
 		while(data != -1) {
-			
+
 			//char a = (char)data;
-			text += (char)data;
+			//text += (char)data;
 			
 			
 			/* Pourcentage */
@@ -67,7 +69,7 @@ public class Huffman {  // Written by: Yancy Vance Paredes, October 17, 2013
 //              dict.put(a, 1);
 		}
 
-		if(text.equals("")) {
+		if(nbOctets == 0 ) {
 
         	frame.dispose();
 			JOptionPane erreurFrame = new JOptionPane();
@@ -98,20 +100,47 @@ public class Huffman {  // Written by: Yancy Vance Paredes, October 17, 2013
         }
         
         
- 
-        postorder(pq.poll(), new String());
         
+        if(nbCarac != 1) postorder(pq.poll(), new String());
+        else {
+        	Noeud n = pq.poll();
+        	String s = "0";
+        	System.out.println("\'" + n.getCarac() + "\' -> " + s);
+        	charToCode.put(n.getCarac(), s);
+            codeToChar.put(s, n.getCarac());
+        }
         // Build the table for the variable length codes
        // buildTable(root);
         
         String compressed = new String();
         frame.setTitle("Codage");
         frame.setPourcent(0);
-        for( i = 0; i < text.length(); i++){
-        	frame.setPourcent((int) (100*i/nbOctets));
-        	compressed = compressed + charToCode.get(text.charAt(i));
+        inputstream.close();
+        inputstream = new FileInputStream(entree);
+ 
+        data = inputstream.read(); nbOctetsCompte = 0;
+        while(data != -1) {
+
+        	compressed = compressed + charToCode.get((char)data);
 			
-        }
+			
+			/* Pourcentage */
+			
+			frame.setPourcent((int) (100*nbOctetsCompte/nbOctets));
+			
+			nbOctetsCompte++;
+			
+		
+			
+			data = inputstream.read();
+		}
+
+
+//        for( i = 0; i < text.length(); i++){
+//        	frame.setPourcent((int) (100*i/nbOctets));
+//        	compressed = compressed + charToCode.get(text.charAt(i));
+//			
+//        }
        
         frame.dispose();
         
@@ -125,10 +154,10 @@ public class Huffman {  // Written by: Yancy Vance Paredes, October 17, 2013
  
         //String decompressed = decompress(compressed);
       //  System.out.println("The original text used a total of " + text.length() + " characters équilavent à " + text.length()*8 +" bits");
-        info += "Taille du fichier d'entrée : " + text.length() + " octets\n";
-        // System.out.println(decompressed);
+        info += "Taille du fichier d'entrée : " + nbOctets + " octets\n";
+       //  System.out.println(decompressed);
        // System.out.println("Taux de compression : " + (double)((100-(100*compressed.length()/(text.length()*8))))+"%");
-        info += "Taux de compression : " + (double)((100-(100*compressed.length()/(text.length()*8))))+"%\n";
+        info += "Taux de compression : " + (double)((100-(100*compressed.length()/(nbOctets*8))))+"%\n";
         saveToFile(compressed,sortie);
         info += "Fichier de sortie : " + sortie;
         infoFrame.showMessageDialog(null, info, "Information", JOptionPane.INFORMATION_MESSAGE);

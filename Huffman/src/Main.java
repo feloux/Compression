@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class Main {
 		public static void main(String[] argv){
-		String entree = "./src/Huffman.java";
+		String entree = "./test.txt";
 		String sortie = "./output.txt";
 		
 		File f = new File(entree);
