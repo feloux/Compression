@@ -89,7 +89,7 @@ public class Huffman {
         }
         
         //Ici l'arbre est crée nous allons crée un codage de manière recursif en parcourant l'arbre
-        if(nbCarac != 1) postorder(bytesList.poll(), new String());
+        if(nbCarac != 1) noeudSuivant(bytesList.poll(), new String());
         //Si le fichier d'entrée ne contenait qu'un seul caractère on lui donne directement une valeur
         else {
         	Noeud n = bytesList.poll();
@@ -102,7 +102,7 @@ public class Huffman {
         motifs.close();
         
         String compresse = new String();
-        frame.setTitle("Codage");
+        frame.setTitle("Compression");
         frame.setPourcent(0);
         inputFile.close();
         inputFile = new FileInputStream(entree);
@@ -118,8 +118,24 @@ public class Huffman {
 			nbOctetsCompte++;
 			data = inputFile.read();
 		}
-        frame.dispose();
         
+        frame.setTitle("Decompression");
+        frame.setPourcent(0);
+        //Fonction de decompression pour test, le codage devra être implémenté en header si possible plus tard
+        
+        String tmp = new String();
+        String decompresse = new String();
+ 
+        for(i = 0; i < compresse.length(); i++) {
+            tmp = tmp + compresse.charAt(i);
+            frame.setPourcent((int) 100*i/compresse.length());
+            if(decodageMap.containsKey(tmp)) {
+                decompresse = decompresse + decodageMap.get(tmp);
+                tmp = new String();
+            }
+        }
+        
+        frame.dispose();
         String info = "";
         info += "Fichier d'entrée : " + entree;
         if(compresse.length() <8 ) info += "\nTaille du fichier de sortie : " + compresse.length() + " bits\n" ;
@@ -131,42 +147,32 @@ public class Huffman {
         
         //sauvegarde du compressé dans un fichier texte pour la visibilité
         PrintWriter outputFile = new PrintWriter(sortie);
+        PrintWriter outputCCFile = new PrintWriter(entree.substring(0,2)+"CC"+entree.substring(2));
+        outputCCFile.println(decompresse);
         outputFile.println(compresse);
+        outputCCFile.close();
         outputFile.close();
         
         
         
-        //Fonction de decompression pour test, le codage devra être implémenté en header si possible plus tard
-      
-//        String tmp = new String();
-//        String decompresse = new String();
-// 
-//        for(i = 0; i < compresse.length(); i++) {
-//            tmp = tmp + compresse.charAt(i);
-// 
-//            if(decodageMap.containsKey(tmp)) {
-//                decompresse = decompresse + decodageMap.get(tmp);
-//                tmp = new String();
-//            }
-//        }
-//        System.out.println(decompresse);
+       
         inputFile.close();
     }
 
 	//Cette fonction crée le codage en parcourant recursivement l'arbre, il sera écrit dans le fichier motifs.txt
-    private void postorder(Noeud n, String s) {
+    private void noeudSuivant(Noeud n, String code) {
         if(n == null)
             return;
         
         //si ce n'est pas un noeud le code du caractère de gauche prend 0 celui de droit 1 et ainsi de suite
-        postorder(n.getGauche(), s+"0");
-        postorder(n.getDroite(), s+"1");
+        noeudSuivant(n.getGauche(), code+"0");
+        noeudSuivant(n.getDroite(), code+"1");
  
         if(n.getCarac() != '\0') {
         	//si on est au bout rempli les Map avec le code correspondant
-        	motifs.println("\'" + n.getCarac() + "\' -> " + s);
-            codageMap.put(n.getCarac(), s);
-            decodageMap.put(s, n.getCarac());
+        	motifs.println("\'" + n.getCarac() + "\' -> " + code);
+            codageMap.put(n.getCarac(), code);
+            decodageMap.put(code, n.getCarac());
         }
     }
 
