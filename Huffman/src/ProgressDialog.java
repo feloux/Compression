@@ -9,7 +9,11 @@ import javax.swing.JProgressBar;
  */
 public class ProgressDialog extends JFrame {
 
-    private JProgressBar progressbar;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JProgressBar progressbar;
 
     public ProgressDialog(String title) {
         super();
@@ -29,18 +33,7 @@ public class ProgressDialog extends JFrame {
      * Afficher la progression de tache
      */
 
-    public void loop() {
-        int position = 0;
-        while (position <= 100) {
-            progressbar.setValue(position);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }
-            position += 5;
-        }
-    }
-    
+   
     public void setPourcent(int position){
     	progressbar.setValue(position);
     	

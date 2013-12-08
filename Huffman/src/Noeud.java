@@ -3,11 +3,15 @@ public class Noeud {
  
     private char carac;
     private int freq;
-    private Noeud left, right;
+    private Noeud gauche, droite;
  
     public Noeud(char a, int f) {
         carac = a;
         freq = f;
+    }
+    
+    public Noeud() {
+    	 
     }
  
     public char getCarac() {
@@ -26,28 +30,20 @@ public class Noeud {
 		this.freq = freq;
 	}
 
-	public Noeud getLeft() {
-		return left;
+	public Noeud getGauche() {
+		return gauche;
 	}
 
-	public void setLeft(Noeud left) {
-		this.left = left;
+	public void setGauche(Noeud gauche) {
+		this.gauche = gauche;
 	}
 
-	public Noeud getRight() {
-		return right;
+	public Noeud getDroite() {
+		return droite;
 	}
 
-	public void setRight(Noeud right) {
-		this.right = right;
+	public void setDroite(Noeud droite) {
+		this.droite = droite;
 	}
-
-	public Noeud() {
- 
-    }
- 
-    public String toString() {
-        return carac + " " + freq;
-    }
  
 }
